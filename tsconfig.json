@@ -11,7 +11,7 @@
     ],
     "target": "ESNext",
     "module": "ESNext",
-    "outDir": "dist",
+    "outDir": "public/assets/dist",
     "baseUrl": "src",
     "paths": {
       "@/*": ["./*"]
