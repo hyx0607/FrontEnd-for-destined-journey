@@ -58,9 +58,9 @@ export const generateInitialPoints = (characterName?: string): number => {
   const weight = 3;
   const weightRandom = Math.pow(random, weight);
 
-  const result = Math.floor(1000 + weightRandom * (10000 - 1000 + 1));
+  const result = Math.floor(1000 + weightRandom * (90000 - 1000 + 1));
 
-  return Math.min(result, 10000);
+  return Math.min(result, 90000);
 };
 
 // 初始转生点数（默认值）
