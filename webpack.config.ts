@@ -14,7 +14,10 @@ import { Server } from 'socket.io';
 import TerserPlugin from 'terser-webpack-plugin';
 import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin';
 import unpluginAutoImport from 'unplugin-auto-import/webpack';
-import { VueUseComponentsResolver, VueUseDirectiveResolver } from 'unplugin-vue-components/resolvers';
+import {
+  VueUseComponentsResolver,
+  VueUseDirectiveResolver,
+} from 'unplugin-vue-components/resolvers';
 import unpluginVueComponents from 'unplugin-vue-components/webpack';
 import { VueLoaderPlugin } from 'vue-loader';
 import webpack from 'webpack';
@@ -56,7 +59,8 @@ function common_path(lhs: string, rhs: string) {
 
 function glob_script_files() {
   const files: string[] = globSync(`src/**/index.{ts,tsx,js,jsx}`).filter(
-    file => process.env.CI !== 'true' || !fs.readFileSync(path.join(__dirname, file)).includes('@no-ci'),
+    file =>
+      process.env.CI !== 'true' || !fs.readFileSync(path.join(__dirname, file)).includes('@no-ci'),
   );
 
   const results: string[] = [];
@@ -127,7 +131,9 @@ function dump_schema(compiler: webpack.Compiler) {
 }
 
 function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Configuration {
-  const should_obfuscate = fs.readFileSync(path.join(__dirname, entry.script), 'utf-8').includes('@obfuscate');
+  const should_obfuscate = fs
+    .readFileSync(path.join(__dirname, entry.script), 'utf-8')
+    .includes('@obfuscate');
   const script_filepath = path.parse(entry.script);
 
   return (_env, argv) => ({
@@ -153,7 +159,11 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
         return `${is_direct === true ? 'src' : 'webpack'}://${info.namespace}/${resource_path}${is_direct || is_vue_script ? '' : '?' + info.hash}`;
       },
       filename: `${script_filepath.name}.js`,
-      path: path.join(__dirname, 'dist', path.relative(path.join(__dirname, 'src'), script_filepath.dir)),
+      path: path.join(
+        __dirname,
+        'docs',
+        path.relative(path.join(__dirname, 'src'), script_filepath.dir),
+      ),
       chunkFilename: `${script_filepath.name}.[contenthash].chunk.js`,
       asyncChunks: true,
       clean: true,
@@ -307,7 +317,11 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
                   },
                   {
                     test: /\.css$/,
-                    use: ['style-loader', { loader: 'css-loader', options: { url: false } }, 'postcss-loader'],
+                    use: [
+                      'style-loader',
+                      { loader: 'css-loader', options: { url: false } },
+                      'postcss-loader',
+                    ],
                     exclude: /node_modules/,
                   },
                 ] as any[])
@@ -413,7 +427,10 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
       minimizer: [
         argv.mode === 'production'
           ? new TerserPlugin({
-              terserOptions: { format: { quote_style: 1 }, mangle: { reserved: ['_', 'toastr', 'YAML', '$', 'z'] } },
+              terserOptions: {
+                format: { quote_style: 1 },
+                mangle: { reserved: ['_', 'toastr', 'YAML', '$', 'z'] },
+              },
             })
           : new TerserPlugin({
               extractComments: false,
@@ -493,7 +510,9 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
       };
       return callback(
         null,
-        'module-import ' + (cdn[request as keyof typeof cdn] ?? `https://testingcf.jsdelivr.net/npm/${request}/+esm`),
+        'module-import ' +
+          (cdn[request as keyof typeof cdn] ??
+            `https://testingcf.jsdelivr.net/npm/${request}/+esm`),
       );
     },
   });
